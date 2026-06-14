@@ -1,10 +1,149 @@
 # ─────────────────────────────────────────────
-# Python 3.10 or 3.11 recommended
-# Install: pip install -r requirements.txt
+# Requirement Assistant Platform
 #
-# LLM options (choose one):
-#   Option A — Ollama (free, local, no API key needed) ← recommended for beginners
-#   Option B — OpenAI (paid API, better accuracy)
+# Python:
+# Python 3.10 or Python 3.11 recommended
+#
+# Install:
+# pip install -r requirements.txt
+#
+# This project supports:
+#
+# Embedding Providers
+# -------------------
+#
+# Option A — Ollama Embeddings (local)
+# Model: nomic-embed-text
+#
+# Option B — BGE Embeddings (local)
+# Model: BAAI/bge-base-en-v1.5
+#
+# Option C — OpenAI Embeddings (cloud)
+# Model: text-embedding-3-small
+#
+# LLM Providers
+# -------------
+#
+# Option A — Ollama (local)
+# Free
+# No API key
+# Recommended for beginners
+#
+# Option B — OpenAI (cloud)
+# Paid API
+# Better answer quality
+#
+# Configure in .env:
+#
+# EMBED_PROVIDER=ollama | bge | openai
+# LLM_PROVIDER=ollama | openai
+#
+# Recommended Configurations
+# --------------------------
+#
+# Fully Local Setup
+#
+# EMBED_PROVIDER=ollama
+# OLLAMA_EMBED_MODEL=nomic-embed-text
+#
+# LLM_PROVIDER=ollama
+# OLLAMA_LLM_MODEL=llama3.2
+#
+# Better Retrieval Quality (Recommended)
+#
+# EMBED_PROVIDER=bge
+# BGE_EMBED_MODEL=BAAI/bge-base-en-v1.5
+#
+# LLM_PROVIDER=ollama
+# OLLAMA_LLM_MODEL=llama3.2
+#
+# Explanation:
+#
+# BGE creates embeddings only.
+#
+# BGE is NOT an LLM.
+#
+# If using BGE:
+#
+# EMBED_PROVIDER=bge
+#
+# you still need:
+#
+# LLM_PROVIDER=ollama
+#
+# or:
+#
+# LLM_PROVIDER=openai
+#
+# Pipeline:
+#
+# User Question
+# ↓
+# BGE Embedding
+# ↓
+# ChromaDB Retrieval
+# ↓
+# Ollama / OpenAI
+# ↓
+# Final Answer
+#
+# Production / Best Quality
+#
+# EMBED_PROVIDER=openai
+# OPENAI_EMBED_MODEL=text-embedding-3-small
+#
+# LLM_PROVIDER=openai
+# OPENAI_LLM_MODEL=gpt-4o-mini
+#
+# Benchmark Comparison
+#
+# Ollama:
+# nomic-embed-text
+#
+# BGE:
+# BAAI/bge-base-en-v1.5
+#
+# OpenAI:
+# text-embedding-3-small
+#
+# Run:
+#
+# python scripts/benchmark_embeddings.py
+#
+# Metrics:
+#
+# Accuracy (Pairwise Retrieval Accuracy)
+# Explanation: For each query, we have a known relevant case (positive) and a known irrelevant case (negative). The embedding model calculates:
+#       Similarity(Query, Positive)
+#       Similarity(Query, Negative)
+#   PASS if Similarity(Query, Positive) > Similarity(Query, Negative)
+# Recall@1: Cases Found In Top  1
+# Recall@3: Cases Found In Top 3
+# Note: For RAG systems, top 3 is often more important than top 1, as the LLM can still generate a good answer if the relevant case is among the top 3 retrieved.
+# Recall@5: Cases Found In Top 5
+# MRR (Mean Reciprocal Rank): How HIGH the correct chunk is ranked = Average of all reciprocal ranks
+# Latency
+# Explanation: Time taken for each step of the pipeline:
+#   Embedding: Time to generate embedding
+#   Retrieval: Time to retrieve from vector database
+#   LLM: Time to generate answer
+#
+# For a RAG project demo, Recall@3 and MRR are the two numbers that most convincingly show retrieval quality.
+#
+# Outputs:
+#
+# outputs/embeddings/reports/
+# outputs/embeddings/images/
+#
+# Run:
+#
+# python scripts/benchmark_llms.py
+#
+# Outputs:
+#
+# outputs/llms/reports/
+# outputs/llms/images/
+#
 # ─────────────────────────────────────────────
 
 # ── Frontend ──────────────────────────────────
@@ -25,7 +164,7 @@ langchain-community==0.4.2       # Required by langchain-ollama
 sentence-transformers==5.5.1     # Free local embeddings — works with both options
 
 # Option B: OpenAI (uncomment if using OpenAI instead of Ollama)
-# openai==2.41.1                 # OpenAI API (GPT-4o-mini + text-embedding-3-small)
+openai==2.41.1                 # OpenAI API (GPT-4o-mini + text-embedding-3-small)
 
 # ── Vector Database ───────────────────────────
 chromadb==1.5.9         # Local persistent vector store (recommended)
@@ -38,19 +177,105 @@ uvicorn==0.49.0         # ASGI server for FastAPI
 # ── Environment & Config ──────────────────────
 python-dotenv==1.2.2    # Load API keys from .env file (still useful for config vars)
 
+# ── Image output ──────────────────────────────
+matplotlib>=3.8.0       # For plotting benchmark results (optional, only needed if generating charts)
+
 # ─────────────────────────────────────────────
-# OLLAMA SETUP (Option A) — do this before running the app
+# OLLAMA SETUP
 #
-# 1. Download and install Ollama: https://ollama.com/download
-# 2. Pull a model (run in terminal):
-#       ollama pull llama3.2        ← recommended: fast, good quality, ~2GB
-#       ollama pull mistral         ← alternative: strong reasoning
-#       ollama pull gemma3          ← alternative: lightweight, runs on low RAM
-# 3. Ollama runs as a local server at http://localhost:11434 — keep it running
-# 4. No API key needed. No internet required after the model is downloaded.
+# Required if:
+#
+# LLM_PROVIDER=ollama
+#
+# Setup:
+#
+# python scripts/setup_ollama.py
+#
+# Ollama local server:
+#
+# http://localhost:11434
+#
+# Keep Ollama running while using the application.
 #
 # Recommended model by hardware:
 #   8GB  RAM  → llama3.2 (3B)   or gemma3 (4B)
 #   16GB RAM  → llama3.2 (8B)   or mistral (7B)
 #   32GB RAM  → llama3.1 (8B)   or mixtral (8x7B)
+
+# ─────────────────────────────────────────────
+# BGE SETUP
+#
+# Required if:
+#
+# EMBED_PROVIDER=bge
+#
+# Setup:
+#
+# python scripts/setup_bge.py
+#
+# Configuration:
+#
+# EMBED_PROVIDER=bge
+# BGE_EMBED_MODEL=BAAI/bge-base-en-v1.5
+#
+# Important:
+#
+# BGE runs locally using sentence-transformers.
+#
+# No API key required.
+#
+# No HTTP server required.
+#
+# You do NOT need:
+#
+# http://localhost:5001
+#
+# Internet is required only for the first model download.
+#
+# Optional:
+#
+# HF_TOKEN=<your_huggingface_token>
+#
+# Recommended when:
+#
+# - Better retrieval quality is required
+# - Running embedding benchmarks
+# - Building requirement search systems
+#
+# ─────────────────────────────────────────────
+
+# OPENAI SETUP
+#
+# Required if:
+#
+# EMBED_PROVIDER=openai
+#
+# or
+#
+# LLM_PROVIDER=openai
+#
+# Create API key:
+#
+# https://platform.openai.com/api-keys
+#
+# Example:
+#
+# OPENAI_API_KEY=<your_api_key>
+#
+# Recommended:
+#
+# OPENAI_EMBED_MODEL=text-embedding-3-small
+# OPENAI_LLM_MODEL=gpt-4o-mini
+#
+# Advantages:
+#
+# - Excellent retrieval quality
+# - Excellent answer quality
+# - No local model downloads
+#
+# Limitations:
+#
+# - Internet required
+# - Usage cost applies
+#
 # ─────────────────────────────────────────────
