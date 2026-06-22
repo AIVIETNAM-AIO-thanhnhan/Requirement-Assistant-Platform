@@ -147,21 +147,21 @@
 # ─────────────────────────────────────────────
 
 # ── Frontend ──────────────────────────────────
-streamlit==1.58.0
+streamlit==1.50.0
 
 # ── Document Parsing ──────────────────────────
 pypdf==6.13.2           # PDF text extraction
 python-docx==1.2.0      # DOCX text extraction
 
 # ── RAG Framework ─────────────────────────────
-langchain==1.3.7
-langchain-ollama==1.1.0          # LangChain integration for Ollama  (Option A)
-langchain-community==0.4.2       # Required by langchain-ollama
+langchain==0.3.27
+langchain-ollama==0.3.10      # LangChain integration for Ollama  (Option A)
+langchain-community==0.3.31     # Required by langchain-ollama
 # langchain-openai==1.3.0        # LangChain integration for OpenAI  (Option B — uncomment if using OpenAI)
 
 # ── LLM & Embeddings ──────────────────────────
 # Option A: Ollama (install Ollama app separately — see setup notes below)
-sentence-transformers==5.5.1     # Free local embeddings — works with both options
+sentence-transformers==5.1.2     # Free local embeddings — works with both options
 
 # Option B: OpenAI (uncomment if using OpenAI instead of Ollama)
 openai==2.41.1                 # OpenAI API (GPT-4o-mini + text-embedding-3-small)
@@ -171,11 +171,11 @@ chromadb==1.5.9         # Local persistent vector store (recommended)
 # faiss-cpu==1.9.0      # Alternative: FAISS (uncomment if using FAISS instead)
 
 # ── Backend API (optional) ────────────────────
-fastapi==0.136.3        # REST API layer (only needed if exposing a backend API)
-uvicorn==0.49.0         # ASGI server for FastAPI
+fastapi==0.128.8       # REST API layer (only needed if exposing a backend API)
+uvicorn==0.39.0         # ASGI server for FastAPI
 
 # ── Environment & Config ──────────────────────
-python-dotenv==1.2.2    # Load API keys from .env file (still useful for config vars)
+python-dotenv==1.2.1    # Load API keys from .env file (still useful for config vars)
 
 # ── Image output ──────────────────────────────
 matplotlib>=3.8.0       # For plotting benchmark results (optional, only needed if generating charts)
