@@ -1,9 +1,10 @@
-# Baseline Retrieval Evaluation
+# Baseline Retrieval Evaluation (chính thức)
 
 Mốc tham chiếu cho mọi thử nghiệm chunk-tuning về sau. KHÔNG sửa file này khi tune;
 tạo bản ghi mới (vd BASELINE_v2.md) và so với mốc này.
 
-Ngày đo: 2026-06-21
+Ngày đo: 2026-06-24
+Ghi chú: thay thế baseline tạm 6 câu trước đó (R@1=0.50) bằng bộ gold 38 câu cân đối.
 
 ## Cấu hình đã dùng (phải tái lập đúng để so sánh)
 
@@ -18,35 +19,35 @@ Ngày đo: 2026-06-21
 | Chuẩn hóa text      | NFC (clean_text)                                     |
 | Collection          | qa_documents_vi                                      |
 | Corpus              | 4 văn bản → 646 chunk                                |
-|                     | BoLuatLaoDong_2019: 294 (luat)                       |
-|                     | NghiDinh_145_2020: 289 (nghi_dinh)                   |
-|                     | ThongTu_10_2020_BLDTBXH: 45 (thong_tu)              |
-|                     | NghiDinh_135_2020: 18 (nghi_dinh)                    |
-| Gold set            | eval/gold_match.jsonl (match-based, 6 câu)           |
+| Gold set            | eval/gold_match.jsonl (match-based, 38 câu)          |
+| Phân bố gold        | 19 Bộ luật / 11 NĐ145 / 3 NĐ135 / 5 TT10            |
 | top_k khi đo        | 5                                                    |
 
 ## Kết quả
 
 | Metric    | Giá trị |
 | --------- | ------- |
-| Recall@1  | 0.5000  |
-| Recall@3  | 0.8333  |
-| Recall@5  | 1.0000  |
-| MRR       | 0.6528  |
+| Recall@1  | 0.8158  |
+| Recall@3  | 0.9474  |
+| Recall@5  | 0.9737  |
+| MRR       | 0.8781  |
 
-Chi tiết theo câu (hạng chunk đúng đầu tiên):
+31/38 câu đạt hạng 1. Các câu chưa tối ưu (hạng > 1):
 
-| ID | Hạng | RR     | Câu hỏi                                          |
-| -- | ---- | ------ | ------------------------------------------------ |
-| q1 | 4    | 0.2500 | Thời giờ làm việc bình thường tối đa mỗi tuần    |
-| q2 | 3    | 0.3333 | Mỗi ngày làm việc bình thường tối đa mấy giờ     |
-| q3 | 1    | 1.0000 | Số giờ làm thêm tối đa trong một năm             |
-| q4 | 3    | 0.3333 | Nghỉ giữa giờ ít nhất bao nhiêu phút             |
-| q5 | 1    | 1.0000 | Nghỉ việc riêng khi kết hôn mấy ngày             |
-| q6 | 1    | 1.0000 | Các ngày nghỉ lễ tết hưởng nguyên lương          |
+| ID  | Điều / nguồn            | Hạng | Ghi chú                                   |
+| --- | ----------------------- | ---- | ----------------------------------------- |
+| q5  | Điều 36 (Bộ luật)       | 3    |                                           |
+| q8  | Điều 54 (Bộ luật)       | 3    | cạnh tranh với Điều 53/55 cho thuê lại    |
+| q14 | Điều 109 (Bộ luật)      | MISS | bị NĐ145 Điều 58/64 (cùng chủ đề) lấn át  |
+| q21 | Điều 8 (NĐ145)          | 5    |                                           |
+| q29 | Điều 69 (NĐ145)         | 2    |                                           |
+| q33 | Điều 7 (NĐ135)          | 2    |                                           |
+| q34 | Điều 3 (TT10)           | 2    |                                           |
 
-## Cảnh báo về độ tin cậy
+## Quan sát chính
 
-Gold set hiện chỉ có **6 câu** → số liệu mang tính chỉ báo, chưa đủ vững để ra quyết
-định tuning. Cần mở rộng lên **≥30–50 câu** trải đều 4 văn bản trước khi coi đây là
-mốc chính thức để so sánh.
+- Điểm yếu rõ nhất: câu hỏi mà nội dung trùng chủ đề ở nhiều văn bản (Bộ luật nêu
+  ngắn, Nghị định hướng dẫn chi tiết) → retrieval ưu tiên bản chi tiết, lấn át điều
+  luật gốc (điển hình q14). Đây là mục tiêu cho enrich metadata / điều chỉnh chunk
+  ở Phase 2, KHÔNG phải lỗi gold.
+- Toàn bộ 38 câu đã qua validate_gold (mọi marker đều có chunk khớp trong corpus).
