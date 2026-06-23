@@ -1,6 +1,38 @@
-{"id": "q1", "query": "Thời giờ làm việc bình thường tối đa mỗi tuần là bao nhiêu?", "must_contain": ["Điều 105", "48 giờ"], "source": "BoLuatLaoDong_2019"}
-{"id": "q2", "query": "Mỗi ngày được làm việc bình thường tối đa mấy giờ?", "must_contain": ["Điều 105", "08 giờ"], "source": "BoLuatLaoDong_2019"}
-{"id": "q3", "query": "Số giờ làm thêm tối đa trong một năm là bao nhiêu?", "must_contain": ["Điều 107", "200 giờ"], "source": "BoLuatLaoDong_2019"}
-{"id": "q4", "query": "Người lao động được nghỉ giữa giờ ít nhất bao nhiêu phút?", "must_contain": ["Điều 109", "30 phút"], "source": "BoLuatLaoDong_2019"}
-{"id": "q5", "query": "Nghỉ việc riêng khi kết hôn được nghỉ mấy ngày hưởng nguyên lương?", "must_contain": ["Điều 115"], "source": "BoLuatLaoDong_2019"}
-{"id": "q6", "query": "Các ngày nghỉ lễ tết người lao động được hưởng nguyên lương gồm những ngày nào?", "must_contain": ["Điều 112"], "source": "BoLuatLaoDong_2019"}
+{"id": "q1", "query": "Người lao động có những quyền và nghĩa vụ gì?", "must_contain": ["Điều 5."], "source": "BoLuatLaoDong_2019"}
+{"id": "q2", "query": "Người sử dụng lao động có những quyền và nghĩa vụ gì?", "must_contain": ["Điều 6."], "source": "BoLuatLaoDong_2019"}
+{"id": "q3", "query": "Những hành vi nào bị nghiêm cấm trong lĩnh vực lao động?", "must_contain": ["Điều 8."], "source": "BoLuatLaoDong_2019"}
+{"id": "q4", "query": "Người lao động được quyền đơn phương chấm dứt hợp đồng lao động trong trường hợp nào?", "must_contain": ["Điều 35."], "source": "BoLuatLaoDong_2019"}
+{"id": "q5", "query": "Khi nào người sử dụng lao động được đơn phương chấm dứt hợp đồng lao động?", "must_contain": ["Điều 36."], "source": "BoLuatLaoDong_2019"}
+{"id": "q6", "query": "Khi thay đổi cơ cấu, công nghệ hoặc vì lý do kinh tế, người sử dụng lao động có nghĩa vụ gì?", "must_contain": ["Điều 42."], "source": "BoLuatLaoDong_2019"}
+{"id": "q7", "query": "Hoạt động cho thuê lại lao động phải tuân theo những nguyên tắc nào?", "must_contain": ["Điều 53."], "source": "BoLuatLaoDong_2019"}
+{"id": "q8", "query": "Doanh nghiệp cho thuê lại lao động phải đáp ứng điều kiện gì?", "must_contain": ["Điều 54."], "source": "BoLuatLaoDong_2019"}
+{"id": "q9", "query": "Hợp đồng cho thuê lại lao động gồm những nội dung gì?", "must_contain": ["Điều 55."], "source": "BoLuatLaoDong_2019"}
+{"id": "q10", "query": "Tiền lương làm thêm giờ và làm việc vào ban đêm được tính như thế nào?", "must_contain": ["Điều 98."], "source": "BoLuatLaoDong_2019"}
+{"id": "q11", "query": "Khi phải ngừng việc thì người lao động được trả lương ra sao?", "must_contain": ["Điều 99"], "source": "BoLuatLaoDong_2019"}
+{"id": "q12", "query": "Việc trả lương thông qua người cai thầu được quy định thế nào?", "must_contain": ["Điều 100."], "source": "BoLuatLaoDong_2019"}
+{"id": "q13", "query": "Làm thêm giờ được quy định như thế nào và tối đa bao nhiêu giờ?", "must_contain": ["Điều 107."], "source": "BoLuatLaoDong_2019"}
+{"id": "q14", "query": "Người lao động được nghỉ trong giờ làm việc bao lâu?", "must_contain": ["Điều 109."], "source": "BoLuatLaoDong_2019"}
+{"id": "q15", "query": "Nghỉ chuyển ca được quy định như thế nào?", "must_contain": ["Điều 110."], "source": "BoLuatLaoDong_2019"}
+{"id": "q16", "query": "Người lao động được nghỉ những ngày lễ, tết nào và hưởng nguyên lương?", "must_contain": ["Điều 112."], "source": "BoLuatLaoDong_2019"}
+{"id": "q17", "query": "Quy định về người lao động Việt Nam đi làm việc ở nước ngoài như thế nào?", "must_contain": ["Điều 150."], "source": "BoLuatLaoDong_2019"}
+{"id": "q18", "query": "Điều kiện tuyển dụng, sử dụng người lao động nước ngoài làm việc tại Việt Nam là gì?", "must_contain": ["Điều 152."], "source": "BoLuatLaoDong_2019"}
+{"id": "q19", "query": "Những người lao động nước ngoài nào không thuộc diện cấp giấy phép lao động?", "must_contain": ["Điều 154."], "source": "BoLuatLaoDong_2019"}
+{"id": "q20", "query": "Sổ quản lý lao động được lập và sử dụng như thế nào?", "must_contain": ["Điều 3."], "source": "NghiDinh_145_2020"}
+{"id": "q21", "query": "Cách tính trợ cấp thôi việc và trợ cấp mất việc làm được quy định ra sao?", "must_contain": ["Điều 8."], "source": "NghiDinh_145_2020"}
+{"id": "q22", "query": "Hợp đồng lao động vô hiệu toàn bộ do nội dung vi phạm pháp luật được xử lý thế nào?", "must_contain": ["Điều 11."], "source": "NghiDinh_145_2020"}
+{"id": "q23", "query": "Doanh nghiệp cho thuê lại lao động phải nộp tiền ký quỹ như thế nào?", "must_contain": ["Điều 16."], "source": "NghiDinh_145_2020"}
+{"id": "q24", "query": "Tiền lương làm thêm giờ được tính theo công thức nào?", "must_contain": ["Điều 55."], "source": "NghiDinh_145_2020"}
+{"id": "q25", "query": "Những khoảng thời gian nào được tính vào thời giờ làm việc được hưởng lương?", "must_contain": ["Điều 58."], "source": "NghiDinh_145_2020"}
+{"id": "q26", "query": "Giới hạn số giờ làm thêm trong ngày và trong tháng là bao nhiêu?", "must_contain": ["Điều 60."], "source": "NghiDinh_145_2020"}
+{"id": "q27", "query": "Thời gian nghỉ trong giờ làm việc được quy định chi tiết thế nào?", "must_contain": ["Điều 64."], "source": "NghiDinh_145_2020"}
+{"id": "q28", "query": "Những công việc có tính chất đặc biệt về thời giờ làm việc, nghỉ ngơi gồm những gì?", "must_contain": ["Điều 68."], "source": "NghiDinh_145_2020"}
+{"id": "q29", "query": "Nội quy lao động phải có những nội dung gì?", "must_contain": ["Điều 69."], "source": "NghiDinh_145_2020"}
+{"id": "q30", "query": "Người lao động khiếu nại về kỷ luật lao động, trách nhiệm vật chất theo trình tự nào?", "must_contain": ["Điều 73."], "source": "NghiDinh_145_2020"}
+{"id": "q31", "query": "Tuổi nghỉ hưu trong điều kiện lao động bình thường từ năm 2021 là bao nhiêu?", "must_contain": ["Điều 4."], "source": "NghiDinh_135_2020"}
+{"id": "q32", "query": "Trường hợp nào được nghỉ hưu ở tuổi thấp hơn tuổi nghỉ hưu bình thường?", "must_contain": ["Điều 5."], "source": "NghiDinh_135_2020"}
+{"id": "q33", "query": "Quy định chuyển tiếp về tuổi nghỉ hưu áp dụng như thế nào?", "must_contain": ["Điều 7."], "source": "NghiDinh_135_2020"}
+{"id": "q34", "query": "Hợp đồng lao động phải có những nội dung chủ yếu nào?", "must_contain": ["Điều 3."], "source": "ThongTu_10_2020"}
+{"id": "q35", "query": "Thỏa thuận bảo vệ bí mật kinh doanh, bí mật công nghệ trong hợp đồng lao động gồm những gì?", "must_contain": ["Điều 4."], "source": "ThongTu_10_2020"}
+{"id": "q36", "query": "Nội dung chủ yếu của hợp đồng lao động trong lĩnh vực nông, lâm, ngư, diêm nghiệp gồm những gì?", "must_contain": ["Điều 5."], "source": "ThongTu_10_2020"}
+{"id": "q37", "query": "Hội đồng thương lượng tập thể có những nhiệm vụ gì?", "must_contain": ["Điều 8."], "source": "ThongTu_10_2020"}
+{"id": "q38", "query": "Trách nhiệm của người sử dụng lao động và người lao động trong thực hiện danh mục nghề ảnh hưởng xấu tới chức năng sinh sản, nuôi con là gì?", "must_contain": ["Điều 11."], "source": "ThongTu_10_2020"}
