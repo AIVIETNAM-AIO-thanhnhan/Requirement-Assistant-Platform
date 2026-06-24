@@ -13,13 +13,19 @@ Cài: pip install pymupdf python-docx openpyxl
 
 from pathlib import Path
 
-import fitz  # PyMuPDF
 from docx import Document
-from openpyxl import load_workbook
+
+try:
+    import fitz  # PyMuPDF
+except ImportError:  # pragma: no cover - handled at runtime
+    fitz = None
 
 
 def parse_pdf(path: Path) -> str:
     """Trích text từ PDF dạng text. Trả về '' nếu là PDF scan (không có text)."""
+    if fitz is None:
+        raise ImportError("PyMuPDF is not installed. Install 'pymupdf' to process PDF files.")
+
     doc = fitz.open(str(path))
     text = "\n".join(page.get_text() for page in doc)
     doc.close()
@@ -40,6 +46,11 @@ def parse_docx(path: Path) -> str:
 
 def parse_xlsx(path: Path) -> str:
     """Đọc mọi sheet trong file Excel. Mỗi dòng nối các ô bằng ' | '."""
+    try:
+        from openpyxl import load_workbook
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise ImportError("openpyxl is not installed. Install 'openpyxl' to process Excel files.") from exc
+
     wb = load_workbook(str(path), data_only=True, read_only=True)
     parts = []
     for ws in wb.worksheets:
