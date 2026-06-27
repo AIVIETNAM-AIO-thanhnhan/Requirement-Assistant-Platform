@@ -1,6 +1,0 @@
-{"id": "q1", "query": "Thời giờ làm việc bình thường tối đa mỗi tuần là bao nhiêu?", "must_contain": ["Điều 105", "48 giờ"], "source": "BoLuatLaoDong_2019"}
-{"id": "q2", "query": "Mỗi ngày được làm việc bình thường tối đa mấy giờ?", "must_contain": ["Điều 105", "08 giờ"], "source": "BoLuatLaoDong_2019"}
-{"id": "q3", "query": "Số giờ làm thêm tối đa trong một năm là bao nhiêu?", "must_contain": ["Điều 107", "200 giờ"], "source": "BoLuatLaoDong_2019"}
-{"id": "q4", "query": "Người lao động được nghỉ giữa giờ ít nhất bao nhiêu phút?", "must_contain": ["Điều 109", "30 phút"], "source": "BoLuatLaoDong_2019"}
-{"id": "q5", "query": "Nghỉ việc riêng khi kết hôn được nghỉ mấy ngày hưởng nguyên lương?", "must_contain": ["Điều 115"], "source": "BoLuatLaoDong_2019"}
-{"id": "q6", "query": "Các ngày nghỉ lễ tết người lao động được hưởng nguyên lương gồm những ngày nào?", "must_contain": ["Điều 112"], "source": "BoLuatLaoDong_2019"}
