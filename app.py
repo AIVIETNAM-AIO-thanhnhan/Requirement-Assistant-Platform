@@ -37,6 +37,29 @@ if "uploaded_docs" not in st.session_state:
     st.session_state.uploaded_docs = []
 if "history" not in st.session_state:
     st.session_state.history = []
+if "question_input" not in st.session_state:
+    st.session_state.question_input = ""
+
+
+def load_sample_questions():
+    """Load the gold question set for display as samples."""
+    import json
+
+    path = ROOT_DIR / "eval" / "gold_match.jsonl"
+    questions = []
+    try:
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                row = json.loads(line)
+                q = row.get("query") or row.get("question")
+                if q:
+                    questions.append(q)
+    except Exception:
+        pass
+    return questions
 
 
 def _get_chroma_store():
@@ -242,9 +265,32 @@ if uploaded_files:
 st.divider()
 
 st.subheader("Ask a question")
+
+sample_questions = load_sample_questions()
+if sample_questions:
+    with st.expander(f"📋 Câu hỏi mẫu ({len(sample_questions)} câu)"):
+        st.selectbox(
+            "Chọn một câu hỏi mẫu",
+            options=["— Chọn —"] + sample_questions,
+            index=0,
+            key="sample_select",
+        )
+
+        def _use_sample():
+            sel = st.session_state.get("sample_select", "")
+            if sel and sel != "— Chọn —":
+                st.session_state.question_input = sel
+
+        st.button("Dùng câu này", on_click=_use_sample)
+
+        st.caption("Toàn bộ danh sách:")
+        for i, q in enumerate(sample_questions, 1):
+            st.write(f"{i}. {q}")
+
 question = st.text_input(
     "Question",
-    placeholder="Example: What are the login validation requirements?",
+    key="question_input",
+    placeholder="Ví dụ: Giới hạn số giờ làm thêm trong ngày và trong tháng là bao nhiêu?",
 )
 
 if st.button("Get Answer", type="primary"):
