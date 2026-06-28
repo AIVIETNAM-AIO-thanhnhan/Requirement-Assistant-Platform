@@ -151,7 +151,9 @@ streamlit==1.50.0
 
 # ── Document Parsing ──────────────────────────
 pypdf==6.13.2           # PDF text extraction
+pymupdf==1.24.10        # PDF text extraction via fitz
 python-docx==1.2.0      # DOCX text extraction
+openpyxl==3.1.5         # XLSX text extraction
 
 # ── RAG Framework ─────────────────────────────
 langchain==0.3.27
