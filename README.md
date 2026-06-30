@@ -86,7 +86,7 @@ Requirement Documents
                     │
                     ▼
             Text Extraction
-             PDF / DOCX / TXT
+          PDF / DOCX / TXT / XLSX
                     │
                     ▼
              Text Cleaning
@@ -99,7 +99,7 @@ Requirement Documents
                     │
                     ▼
         Embedding Provider
-    (Ollama / BGE / OpenAI)
+ (Vietnamese / Ollama / BGE / OpenAI)
                     │
                     ▼
                ChromaDB
@@ -119,19 +119,42 @@ Requirement Documents
 
 ## 6. Technology Stack
 
-| Component       | Tool                  |
-| --------------- | --------------------- |
-| Language        | Python                |
-| Frontend        | Streamlit             |
-| Backend         | FastAPI               |
-| Parsing         | pypdf, python-docx    |
-| Embedding       | Ollama / BGE / OpenAI |
-| LLM             | Ollama / OpenAI       |
-| Vector DB       | ChromaDB              |
-| Framework       | LangChain             |
-| Version Control | GitHub                |
+| Component       | Tool                                |
+| --------------- | ----------------------------------- |
+| Language        | Python                              |
+| Frontend        | Streamlit                           |
+| Backend         | FastAPI *(planned, not yet implemented)* |
+| Parsing         | PyMuPDF, python-docx, openpyxl      |
+| Embedding       | Vietnamese / Ollama / BGE / OpenAI  |
+| LLM             | Ollama / OpenAI                     |
+| Vector DB       | ChromaDB                            |
+| Framework       | LangChain, sentence-transformers    |
+| Version Control | GitHub                              |
+
+Supported upload formats: **PDF, DOCX, TXT, XLSX**.
 
 ### Supported Embedding Providers
+
+#### Vietnamese Embeddings (baseline)
+
+```env
+EMBED_PROVIDER=vietnamese
+VI_EMBED_MODEL=AITeamVN/Vietnamese_Embedding
+```
+
+Advantages:
+
+* Built on BGE-M3 (1024-dim), specialized for Vietnamese
+* Best retrieval quality on Vietnamese corpora (the project's baseline model)
+* Runs locally using `sentence-transformers`; no HTTP server or API key
+
+Setup:
+
+```bash
+python scripts/setup_project.py --embed-provider vietnamese
+```
+
+---
 
 #### Ollama Embeddings
 
@@ -221,8 +244,8 @@ Alternatives:
 
 ```text
 mistral
-gemma3
-llama3.1
+qwen3:8b
+llama3.1:8b
 ```
 
 #### OpenAI LLM
@@ -260,6 +283,7 @@ python scripts/setup_project.py
 Setup with a specific embedding provider:
 
 ```bash
+python scripts/setup_project.py --embed-provider vietnamese
 python scripts/setup_project.py --embed-provider ollama
 python scripts/setup_project.py --embed-provider bge
 python scripts/setup_project.py --embed-provider openai
@@ -340,7 +364,7 @@ python scripts/benchmark_embeddings.py
 Output:
 
 ```text
-outputs/embeddings/reports/embedding_pairwise_report.csv
+outputs/embeddings/<provider>/<model>/reports/embedding_pairwise_report.csv
 ```
 
 ---
@@ -381,8 +405,8 @@ python scripts/benchmark_embeddings.py
 Output:
 
 ```text
-outputs/embeddings/reports/retrieval_ranking_report.csv
-outputs/embeddings/reports/embedding_summary_report.md
+outputs/embeddings/<provider>/<model>/reports/retrieval_ranking_report.csv
+outputs/embeddings/<provider>/<model>/reports/embedding_summary_report.md
 ```
 
 ---
@@ -422,9 +446,38 @@ python scripts/benchmark_llms.py
 Output:
 
 ```text
-outputs/llms/reports/answer_quality_report.csv
-outputs/llms/reports/answer_quality_summary_report.md
+outputs/llms/<provider>/<model>/reports/answer_quality_report.csv
+outputs/llms/<provider>/<model>/reports/answer_quality_summary_report.md
 ```
+
+---
+
+### Level 4 — End-to-End Retrieval Evaluation
+
+Purpose:
+
+Unlike Levels 1–2 (which score an embedder in isolation on a generic sample set),
+this evaluates the **full RAG pipeline** — chunking + embedding + ChromaDB — by
+running queries against the **actual indexed corpus**.
+
+Gold set: `eval/gold_match.jsonl` (match-based — a chunk is correct if its text
+contains the `must_contain` marker, e.g. `"Điều 5."`, and matches `source`). This
+makes the metric stable across re-chunking. `eval/BASELINE.md` and `eval/TUNING.md`
+record the reference scores used for chunk-tuning experiments.
+
+Run (set the provider and its collection to match):
+
+```bash
+EMBED_PROVIDER=vietnamese CHROMA_COLLECTION=qa_documents_vietnamese \
+  python scripts/rag_eval.py score --gold eval/gold_match.jsonl --k 1 3 5 \
+  --out outputs/comparison/rag_eval_vietnamese.json
+```
+
+Metrics: Recall@1, Recall@3, Recall@5, MRR (computed on the real corpus).
+
+> Note: an English-centric embedder may look strong on the Level 1–2 generic set
+> yet score poorly here on a Vietnamese corpus — only this end-to-end evaluation
+> reveals real-world quality for your documents.
 
 ---
 
@@ -435,7 +488,7 @@ The benchmark framework generates both machine-readable reports and human-readab
 ### Embedding Benchmark Outputs
 
 ```text
-outputs/embeddings/
+outputs/embeddings/<provider>/<model>/
 ├── reports/
 │   ├── embedding_pairwise_report.csv
 │   ├── retrieval_ranking_report.csv
@@ -449,10 +502,12 @@ outputs/embeddings/
     └── benchmark_summary.png
 ```
 
+Example: `outputs/embeddings/vietnamese/AITeamVN_Vietnamese_Embedding/reports/`
+
 ### LLM Benchmark Outputs
 
 ```text
-outputs/llms/
+outputs/llms/<provider>/<model>/
 ├── reports/
 │   ├── answer_quality_report.csv
 │   └── answer_quality_summary_report.md
@@ -467,25 +522,39 @@ outputs/llms/
 ### Example Embedding Summary
 
 ```text
-nomic-embed-text đạt Recall@3 = 91%
-Thời gian embedding trung bình = 0.35s/document
-Đề xuất sử dụng cho Simple RAG Requirement Assistant MVP
+<model> achieved Recall@3 = 95.24%
+Average embedding latency = 0.0658s/document
+Recommended for the Simple RAG Requirement Assistant
 ```
+
+(Each summary is generated from real benchmark results in
+`outputs/embeddings/<provider>/<model>/reports/embedding_summary_report.md`.)
 
 ### Comparing Embedding Providers
 
-To compare providers, update `.env` or run setup with the target provider:
+Benchmark each target provider (each writes its own per-model report):
 
 ```bash
+python scripts/setup_project.py --embed-provider vietnamese
+python scripts/benchmark_embeddings.py
+
 python scripts/setup_project.py --embed-provider ollama
 python scripts/benchmark_embeddings.py
 
 python scripts/setup_project.py --embed-provider bge
 python scripts/benchmark_embeddings.py
-
-python scripts/setup_project.py --embed-provider openai
-python scripts/benchmark_embeddings.py
 ```
+
+Then aggregate all per-model reports into side-by-side comparison tables:
+
+```bash
+python scripts/compare_models.py
+# -> outputs/comparison/embedding_comparison.{csv,md}
+# -> outputs/comparison/llm_comparison.{csv,md}
+```
+
+The Streamlit app also shows these comparisons (component benchmark + end-to-end
+retrieval) in the **"Model quality comparison"** panel.
 
 Compare:
 
@@ -600,15 +669,16 @@ streamlit run app.py
 ## 12. Default Configuration
 
 ```env
-# Embedding Provider
+# Embedding Provider — options: vietnamese | ollama | bge | openai
 
-EMBED_PROVIDER=ollama
+EMBED_PROVIDER=vietnamese
 
+VI_EMBED_MODEL=AITeamVN/Vietnamese_Embedding
 OLLAMA_EMBED_MODEL=nomic-embed-text
 BGE_EMBED_MODEL=BAAI/bge-base-en-v1.5
 OPENAI_EMBED_MODEL=text-embedding-3-small
 
-# LLM Provider
+# LLM Provider — options: ollama | openai
 
 LLM_PROVIDER=ollama
 
@@ -619,13 +689,13 @@ OPENAI_LLM_MODEL=gpt-4o-mini
 
 OLLAMA_URL=http://localhost:11434
 
-# Optional only if building separate BGE API server later
-BGE_SERVER_URL=http://localhost:5001
-
 # ChromaDB
+# The app and build_vectordb.py override this per provider as
+# qa_documents_<EMBED_PROVIDER>, so each embedder keeps its own collection
+# (vector dimensions never clash). The value below is only a fallback.
 
 CHROMA_DB_PATH=./data/chroma
-CHROMA_COLLECTION=qa_documents
+CHROMA_COLLECTION=qa_documents_vietnamese
 ```
 
 ---
@@ -657,7 +727,4 @@ Demonstrate a working RAG application that:
 * Evaluates retrieval quality
 * Evaluates answer quality
 
-using Ollama, BGE/OpenAI embeddings, ChromaDB, LangChain, and Prompt Engineering.
-
-```
-```
+using Vietnamese/Ollama/BGE/OpenAI embeddings, ChromaDB, LangChain, and Prompt Engineering.

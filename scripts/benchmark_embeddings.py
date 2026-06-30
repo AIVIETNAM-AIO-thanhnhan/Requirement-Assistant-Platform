@@ -54,6 +54,9 @@ def get_embedding_model_name() -> str:
     if provider == "bge":
         return os.getenv("BGE_EMBED_MODEL", "BAAI/bge-base-en-v1.5")
 
+    if provider == "vietnamese":
+        return os.getenv("VI_EMBED_MODEL", "AITeamVN/Vietnamese_Embedding")
+
     if provider == "openai":
         return os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
 

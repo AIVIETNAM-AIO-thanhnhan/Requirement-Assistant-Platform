@@ -120,6 +120,32 @@ class ChromaStore:
 
         return self.collection.count()
 
+    def list_documents(self) -> list[dict]:
+        """
+        Return the distinct source documents currently indexed, each with its
+        chunk count, derived from chunk metadata.
+
+        This reflects the real contents of the vector store, so the UI can show
+        an accurate Knowledge Base that survives reruns and app restarts.
+        """
+
+        try:
+            result = self.collection.get(include=["metadatas"])
+        except Exception:
+            return []
+
+        counts: dict[str, int] = {}
+        for meta in result.get("metadatas", []) or []:
+            if not isinstance(meta, dict):
+                continue
+            source = meta.get("source") or "Unknown source"
+            counts[source] = counts.get(source, 0) + 1
+
+        return [
+            {"name": name, "chunk_count": chunk_count}
+            for name, chunk_count in sorted(counts.items())
+        ]
+
     def delete_collection(self):
         """
         Delete the current collection.
