@@ -33,11 +33,14 @@ Ollama:
 BGE:
     python scripts/setup_project.py --embed-provider bge
 
+Vietnamese (baseline):
+    python scripts/setup_project.py --embed-provider vietnamese
+
 OpenAI:
     python scripts/setup_project.py --embed-provider openai
 
-Demo with BGE:
-    python scripts/setup_project.py --demo --embed-provider bge
+Demo with Vietnamese baseline:
+    python scripts/setup_project.py --demo --embed-provider vietnamese
 """
 
 import argparse
@@ -151,6 +154,11 @@ def setup_embedding_provider(provider: str):
         run_script("scripts/setup_bge.py")
         return
 
+    if provider == "vietnamese":
+        os.environ["EMBED_PROVIDER"] = "vietnamese"
+        run_script("scripts/setup_vietnamese.py")
+        return
+
     if provider == "openai":
         os.environ["EMBED_PROVIDER"] = "openai"
 
@@ -168,7 +176,7 @@ def setup_embedding_provider(provider: str):
 
     raise ValueError(
         f"Unsupported embedding provider: {provider}. "
-        "Use: ollama, bge, or openai."
+        "Use: ollama, bge, vietnamese, or openai."
     )
 
 
@@ -192,10 +200,11 @@ def parse_args():
         choices=[
             "ollama",
             "bge",
+            "vietnamese",
             "openai",
         ],
         default=os.getenv("EMBED_PROVIDER", "ollama"),
-        help="Embedding provider to setup: ollama, bge, or openai.",
+        help="Embedding provider to setup: ollama, bge, vietnamese, or openai.",
     )
 
     return parser.parse_args()

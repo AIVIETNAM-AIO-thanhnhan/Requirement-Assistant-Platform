@@ -17,6 +17,7 @@ python scripts/build_vectordb.py
 """
 
 import json
+import os
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -108,6 +109,13 @@ def main():
     ids, documents, metadatas = prepare_chroma_payload(chunks)
 
     embedding_provider = get_embedding_provider()
+
+    # Use a provider-specific collection so vector dimensions never clash across
+    # models (Vietnamese/BGE-M3 = 1024-dim vs Ollama nomic-embed-text = 768-dim).
+    # This matches the Streamlit app's convention (qa_documents_<provider>).
+    provider = os.getenv("EMBED_PROVIDER", "ollama").lower()
+    os.environ["CHROMA_COLLECTION"] = f"qa_documents_{provider}"
+
     store = ChromaStore()
 
     print(f"Creating embeddings for {len(documents)} chunks...")
